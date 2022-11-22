@@ -14,6 +14,24 @@ describe("Gilded Rose", function() {
     assert.equal(foo.quality, 9);
   });
 
+  it("shouldn't degrade the quality of an item if it is already 0", () => {
+    const foo = new Item("foo", -10, 0);
+
+    const shop = new Shop([foo]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 0);
+  })
+
+  it("should set the quality as 0 if it is 1 while expired", () => {
+    const foo = new Item("foo", -10, 1);
+
+    const shop = new Shop([foo]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 0);
+  })
+
   specify('golden master', function() {
     const { Shop, Item } = require("../src/gilded_rose");
 
