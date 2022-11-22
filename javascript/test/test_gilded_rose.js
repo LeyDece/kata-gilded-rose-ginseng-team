@@ -60,6 +60,33 @@ describe("Gilded Rose", function () {
     assert.equal(foo.quality, 0);
   });
 
+  it("Backstage increase by 2 when there are 10 days or less", () => {
+    const foo = new Item("Backstage passes to a TAFKAL80ETC concert", 10, 1);
+
+    const shop = new Shop([foo]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 3);
+  });
+
+  it("Backstage increase by 3 when there are 5 days or less", () => {
+    const foo = new Item("Backstage passes to a TAFKAL80ETC concert", 5, 1);
+
+    const shop = new Shop([foo]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 4);
+  });
+
+  it("Backstage quality drops to 0 after the concert", () => {
+    const foo = new Item("Backstage passes to a TAFKAL80ETC concert", 0, 10);
+
+    const shop = new Shop([foo]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 0);
+  });
+
   specify(
     "the quality of an item should degrade twice as fast if it is expired",
     () => {
