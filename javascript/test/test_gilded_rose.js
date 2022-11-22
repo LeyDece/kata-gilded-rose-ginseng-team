@@ -1,10 +1,9 @@
-const fs = require('fs');
-const {assert} = require('chai');
-const {Shop, Item} = require('../src/gilded_rose.js');
+const fs = require("fs");
+const { assert } = require("chai");
+const { Shop, Item } = require("../src/gilded_rose.js");
 
-describe("Gilded Rose", function() {
-
-  it("update quality of a normal item", function() {
+describe("Gilded Rose", function () {
+  it("update quality of a normal item", function () {
     const foo = new Item("foo", 20, 10);
 
     const shop = new Shop([foo]);
@@ -12,6 +11,15 @@ describe("Gilded Rose", function() {
 
     assert.equal(foo.sellIn, 19);
     assert.equal(foo.quality, 9);
+  });
+
+  it("quality cannot be greater than 50", function () {
+    const foo = new Item("Aged Brie", 20, 50);
+
+    const shop = new Shop([foo]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 50);
   });
 
   it("update quality of Aged Brie before expiration date", () => {
@@ -22,7 +30,7 @@ describe("Gilded Rose", function() {
 
     assert.equal(brie.sellIn, 19);
     assert.equal(brie.quality, 11);
-  })
+  });
 
   it("update quality of Aged Brie after expiration date", () => {
     const brie = new Item("Aged Brie", -20, 10);
@@ -32,7 +40,7 @@ describe("Gilded Rose", function() {
 
     assert.equal(brie.sellIn, -21);
     assert.equal(brie.quality, 12);
-  })
+  });
 
   it("shouldn't degrade the quality of an item if it is already 0", () => {
     const foo = new Item("foo", -10, 0);
@@ -41,7 +49,7 @@ describe("Gilded Rose", function() {
     const items = shop.updateQuality();
 
     assert.equal(foo.quality, 0);
-  })
+  });
 
   it("should set the quality as 0 if it is 1 while expired", () => {
     const foo = new Item("foo", -10, 1);
@@ -50,31 +58,37 @@ describe("Gilded Rose", function() {
     const items = shop.updateQuality();
 
     assert.equal(foo.quality, 0);
-  })
+  });
 
-  specify("the quality of an item should degrade twice as fast if it is expired", () => {
-    const foo = new Item("foo", -1, 3);
-    const bar = new Item("foo", -1, 2);
+  specify(
+    "the quality of an item should degrade twice as fast if it is expired",
+    () => {
+      const foo = new Item("foo", -1, 3);
+      const bar = new Item("foo", -1, 2);
 
-    const shop = new Shop([foo, bar]);
-    const items = shop.updateQuality();
+      const shop = new Shop([foo, bar]);
+      const items = shop.updateQuality();
 
-    assert.equal(foo.quality, 1);
-    assert.equal(bar.quality, 0);
-  })
+      assert.equal(foo.quality, 1);
+      assert.equal(bar.quality, 0);
+    }
+  );
 
-  specify("if an item starts the day with SellIn being 0, its quality degrades by two", () => {
-    const foo = new Item("foo", 0, 3);
-    const bar = new Item("foo", 0, 2);
+  specify(
+    "if an item starts the day with SellIn being 0, its quality degrades by two",
+    () => {
+      const foo = new Item("foo", 0, 3);
+      const bar = new Item("foo", 0, 2);
 
-    const shop = new Shop([foo, bar]);
-    const items = shop.updateQuality();
+      const shop = new Shop([foo, bar]);
+      const items = shop.updateQuality();
 
-    assert.equal(foo.quality, 1);
-    assert.equal(bar.quality, 0);
-  })
+      assert.equal(foo.quality, 1);
+      assert.equal(bar.quality, 0);
+    }
+  );
 
-  specify('golden master', function() {
+  specify("golden master", function () {
     const { Shop, Item } = require("../src/gilded_rose");
 
     const items = [
@@ -98,16 +112,19 @@ describe("Gilded Rose", function() {
     for (let day = 0; day <= days; day++) {
       actualLog.push(`-------- day ${day} --------`);
       actualLog.push("name, sellIn, quality");
-      items.forEach(item => actualLog.push(`${item.name}, ${item.sellIn}, ${item.quality}`));
+      items.forEach((item) =>
+        actualLog.push(`${item.name}, ${item.sellIn}, ${item.quality}`)
+      );
       gildedRose.updateQuality();
     }
 
-    const text = fs.readFileSync("../golden-master/expected-output.txt", "UTF-8");
+    const text = fs.readFileSync(
+      "../golden-master/expected-output.txt",
+      "UTF-8"
+    );
     const lines = text.split(/\r?\n/);
-    const expectedLog = lines.filter(x => x.length != 0);
+    const expectedLog = lines.filter((x) => x.length != 0);
 
     assert.deepEqual(actualLog, expectedLog);
-
   });
-
-})
+});
