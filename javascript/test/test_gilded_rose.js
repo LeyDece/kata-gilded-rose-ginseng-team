@@ -122,7 +122,7 @@ describe("Gilded Rose", function () {
     const items = shop.updateQuality();
 
     assert.equal(sulfuras.quality, 80);
-  })
+  });
 
   specify("Sulfuras' SellIn date should not decrease", () => {
     const sulfuras = new Item("Sulfuras, Hand of Ragnaros", 20, 80);
@@ -131,7 +131,7 @@ describe("Gilded Rose", function () {
     const items = shop.updateQuality();
 
     assert.equal(sulfuras.sellIn, 20);
-  })
+  });
 
   specify("golden master", function () {
     const { Shop, Item } = require("../src/gilded_rose");
