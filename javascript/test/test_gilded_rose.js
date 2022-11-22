@@ -32,6 +32,28 @@ describe("Gilded Rose", function() {
     assert.equal(foo.quality, 0);
   })
 
+  specify("the quality of an item should degrade twice as fast if it is expired", () => {
+    const foo = new Item("foo", -1, 3);
+    const bar = new Item("foo", -1, 2);
+
+    const shop = new Shop([foo, bar]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 1);
+    assert.equal(bar.quality, 0);
+  })
+
+  specify("if an item starts the day with SellIn being 0, its quality degrades by two", () => {
+    const foo = new Item("foo", 0, 3);
+    const bar = new Item("foo", 0, 2);
+
+    const shop = new Shop([foo, bar]);
+    const items = shop.updateQuality();
+
+    assert.equal(foo.quality, 1);
+    assert.equal(bar.quality, 0);
+  })
+
   specify('golden master', function() {
     const { Shop, Item } = require("../src/gilded_rose");
 
