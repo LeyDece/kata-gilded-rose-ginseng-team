@@ -14,6 +14,26 @@ describe("Gilded Rose", function() {
     assert.equal(foo.quality, 9);
   });
 
+  it("update quality of Aged Brie before expiration date", () => {
+    const brie = new Item("Aged Brie", 20, 10);
+
+    const shop = new Shop([brie]);
+    const items = shop.updateQuality();
+
+    assert.equal(brie.sellIn, 19);
+    assert.equal(brie.quality, 11);
+  })
+
+  it("update quality of Aged Brie after expiration date", () => {
+    const brie = new Item("Aged Brie", -20, 10);
+
+    const shop = new Shop([brie]);
+    const items = shop.updateQuality();
+
+    assert.equal(brie.sellIn, -21);
+    assert.equal(brie.quality, 12);
+  })
+
   it("shouldn't degrade the quality of an item if it is already 0", () => {
     const foo = new Item("foo", -10, 0);
 
